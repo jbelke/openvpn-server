@@ -1,4 +1,5 @@
 ---
+version: "3.5"
 
 services:
     openvpn:
@@ -34,3 +35,18 @@ services:
            - NET_ADMIN
        restart: always
 
+    openvpn-ui:
+       container_name: openvpn-ui
+       image: d3vilh/openvpn-ui:latest
+       environment:
+           - OPENVPN_ADMIN_USERNAME=${OPENVPN_ADMIN_USERNAME}
+           - OPENVPN_ADMIN_PASSWORD=${OPENVPN_ADMIN_PASSWORD}
+       privileged: true
+       ports:
+           - "8080:8080/tcp"
+       volumes:
+           - ./:/etc/openvpn
+           - ./db:/opt/openvpn-ui/db
+           - ./pki:/usr/share/easy-rsa/pki
+           - /var/run/docker.sock:/var/run/docker.sock:ro
+       restart: always
